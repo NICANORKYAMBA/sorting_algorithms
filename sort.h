@@ -25,5 +25,8 @@ void swap(int *x, int *y);
 void insertion_sort_list(listint_t **list);
 void swapnodes(listint_t **head, listint_t **node1, listint_t *node2);
 void selection_sort(int *array, size_t size);
+void quick_sort(int *array, size_t size);
+void partition(int *array, size_t size, int low, int high);
+void quicksortswap(int *array, size_t size, int idx, int wall);
 
 #endif /* _SORT_H */
