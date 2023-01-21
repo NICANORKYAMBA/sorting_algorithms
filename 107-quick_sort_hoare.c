@@ -1,64 +1,74 @@
 #include "sort.h"
 
+void swap_ints(int *a, int *b);
+void hoare_sort(int *array, size_t size, int left, int right);
+int partition(int *array, size_t size, int left, int right);
 
-void quicksort(int *array, int first, int last, size_t size);
-int partition(int *array, int first, int last, size_t size);
+/**
+ * swap_ints - Swap two integers in an array.
+ * @a: first integer to swap.
+ * @b: second integer to swap.
+ */
+void swap_ints(int *a, int *b)
+{
+	int tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
 
 /**
  * partition - array partition
  *
  * @array: array to sort
- * @first: first position
- * @last: last position
- * @size: array size
+ * @size: size of the array
+ * @left: first position
+ * @right: last position
  * Return: pivot index
  */
-int partition(int *array, int first, int last, size_t size)
+int partition(int *array, size_t size, int left, int right)
 {
-	int pivot, i, j, tmp;
+	int pivot, above, below;
 
-	pivot = array[last];
-	i = first - 1;
-	j = last + 1;
-
-	while (1)
+	pivot = array[right];
+	for (above = left - 1, below = right + 1; above < below;)
 	{
 		do {
-			i++;
-		} while (array[i] < pivot);
-
+			above++;
+		} while (array[above] < pivot);
 		do {
-			j--;
-		} while (array[j] > pivot);
+			below--;
+		} while (array[below] > pivot);
 
-		if (j < i)
-			return (j);
-		if (array[i] > array[j])
+		if (above < below)
 		{
-			tmp = array[i];
-			array[i] = array[j];
-			array[j] = tmp;
+			swap_ints(array + above, array + below);
 			print_array(array, size);
 		}
 	}
+
+	return (above);
 }
 
 /**
- * quicksort - sorts an array of integers recursively
- * @array: array to sort
- * @first: first position
- * @last: last position
- * @size: array size
+ * hoare_sort - implement the quicksort algorithm through recursion.
+ * @array: array of integers to sort.
+ * @size: size of the array.
+ * @left: first index of the array partition to order.
+ * @right: last index of the array partition to order.
+ *
+ * Description: uses the Hoare partition scheme.
  */
-void quicksort(int *array, int first, int last, size_t size)
+void hoare_sort(int *array, size_t size, int left, int right)
 {
-	int pivot;
+	int part;
 
-	if (last - first > 0)
+	if (right - left > 0)
 	{
-		pivot = partition(array, first, last, size);
-		quicksort(array, first, pivot, size);
-		quicksort(array, pivot + 1, last, size);
+		part = partition(array, size, left, right);
+		hoare_sort(array, size, left, part - 1);
+		hoare_sort(array, size, part, right);
 	}
 }
 
@@ -72,6 +82,5 @@ void quick_sort_hoare(int *array, size_t size)
 {
 	if (!array || size < 2)
 		return;
-
-	quicksort(array, 0, size - 1, size);
+	hoare_sort(array, size, 0, size - 1);
 }
